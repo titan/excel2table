@@ -10,6 +10,9 @@ def load(src: str, idx: int):
     row = []
     for j in range(wx.ncols):
       cell = wx.cell(i, j).value
+      if cell.find('|') != -1:
+        print("Cell cannot contains '|' which is a cell seperator")
+        exit(-1)
       row.append(cell)
     model.append(row)
   return model
