@@ -1,20 +1,18 @@
 #! /usr/bin/python
 
-import xlrd
-
 def load(src: str, idx: int):
-  wb = xlrd.open_workbook(src)
-  wx = wb.sheet_by_index(idx)
+  from openpyxl import load_workbook
+  wb = load_workbook(src, read_only = True)
+  wx = wb[wb.sheetnames[0]]
   model = []
-  for i in range(wx.nrows):
-    row = []
-    for j in range(wx.ncols):
-      cell = wx.cell(i, j).value
-      if cell.find('|') != -1:
+  for row in wx.rows:
+    line = []
+    for cell in row:
+      if cell.value and cell.value.find('|') != -1:
         print("Cell cannot contains '|' which is a cell seperator")
         exit(-1)
-      row.append(cell)
-    model.append(row)
+      line.append(cell.value if cell.value else '')
+    model.append(line)
   return model
 
 def save(model, dst: str):
